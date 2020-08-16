@@ -1,28 +1,40 @@
-<%= render partial: 'layouts/errors', locals: {object: @user}  %>
+<div class="container text-center">
+  <%= render partial: 'layouts/errors', locals: {object: @user}  %>
+  <h1>Sign up</h1><br />
+  <%= form_for(@user) do |f| %>
+    <div class="form-group">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
+    </div>
 
-<h1>Sign up</h1>
+    <div class="form-group">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name %>
+    </div>
 
-<%= form_for(@user) do |f| %>
-  <%= f.label :first_name %>
-  <%= f.text_field :first_name %>
+    <div class="form-group">
+      <%= f.label :user_name %>
+      <%= f.text_field :user_name %>
+    </div>
 
-  <%= f.label :last_name %>
-  <%= f.text_field :last_name %>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+    </div>
 
-  <%= f.label :user_name %>
-  <%= f.text_field :user_name %>
+    <div class="form-group">
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+    </div>
 
-  <%= f.label :email %>
-  <%= f.email_field :email %>
+    <div class="form-group">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation %>
+    </div>
 
-  <%= f.label :password %>
-  <%= f.password_field :password %>
+    <p>Admin? <%= f.check_box :admin %></p><br>
+    <br>
 
-  <%= f.label :password_confirmation %>
-  <%= f.password_field :password_confirmation %>
-
-  <p>Admin? <%= f.check_box :admin %></p><br />
-  <br />
-
-  <%= f.submit "Sign Up" %>
-<% end %> 
+    <button type=f.submit class="btn btn-primary">Sign Up</button>
+  <% end %>
+</div> 

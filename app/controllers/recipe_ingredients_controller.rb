@@ -41,7 +41,7 @@ class RecipeIngredientsController < ApplicationController
 
   def destroy_multiple
     RecipeIngredient.destroy(params[:recipe_ingredients])
-    redirect_to recipes_path
+    redirect_to user_path(current_user)
   end
 
   private
