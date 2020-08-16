@@ -1,13 +1,21 @@
 class User < ApplicationRecord
   has_many :recipes
-  has_many :comments
   has_many :ratings
 
-  validates :user_name, presence: true
-  validates :email, uniqueness: true, presence: true, format: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
+  validates :first_name, presence: true, length: { maximum: 255 }
+  validates :last_name, presence: true, length: { maximum: 255 }
+  validates :user_name, presence: true, length: { maximum: 255 }
+  validates :email, presence: true, length: { maximum: 50 },
+                    format: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/,
+                    uniqueness: true
+
   validates :email, confirmation: true
 
+  validates :password, presence: true, length: { minimum: 6 }
+
   has_secure_password
+
+  before_save :email_to_downcase
 
   def self.find_or_create_by_omniauth(auth_hash)
     self.where(name: auth_hash['info']['name']).first_or_create do |user|
@@ -18,5 +26,11 @@ class User < ApplicationRecord
       user.password = SecureRandom.hex
 
     end
+  end
+
+  private
+
+  def email_to_downcase
+    self.email = email.downcase
   end
 end

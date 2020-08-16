@@ -6,22 +6,14 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if auth_hash = request.env['omniauth.auth']
-      @user = User.find_or_create_by_omniauth(auth_hash)
-
+    @user = User.find_by(:email => params[:user][:email])
+    if @user && @user.authenticate(params[:user][:password])
       session[:user_id] = @user.id
 
       redirect_to user_path(@user)
     else
-      @user = User.find_by(:email => params[:user][:email])
-      if @user && @user.authenticate(params[:user][:password])
-        session[:user_id] = @user.id
-
-        redirect_to user_path(@user)
-      else
-        flash[:error] = 'Login info was incorrect. Please try again.'
-        render :new
-      end
+      flash[:error] = 'Login info was incorrect. Please try again.'
+      render :new
     end
   end
 

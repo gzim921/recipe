@@ -11,7 +11,7 @@ class Recipe < ApplicationRecord
 
   validates :name, presence: true
   validates :cooking_time, numericality: { only_integer: true }
-  validates :servings, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 20, message: "can't be blank and has to be a number between 1 and 20" }
+  validates :servings, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 20, message: "can't be blank and has to be a number between 1 and 20" }
   validates :directions, presence: true
 
   accepts_nested_attributes_for :categories
