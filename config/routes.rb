@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'recipe_ingredients/new'
+  get 'ingredients/new'
   root 'static_pages#home'
 
   resources :users
@@ -25,11 +27,11 @@ Rails.application.routes.draw do
   end
 
   resources :categories
-  resources :ingredients
+  resources :recipe_ingredients
 
   resources :recipes do
     resources :categories, only: [:new, :create, :index]
-    resources :ingredients, only: [:new, :create]
+    resources :recipe_ingredients, only: [:new, :create]
   end
 
   resources :ratings, only: [:new, :create]
