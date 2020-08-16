@@ -1,24 +1,30 @@
 Rails.application.routes.draw do
+  root 'static_pages#home'
+
+  resources :users, only: [:new, :create, :show]
+
+  get '/signup', to: 'users#new'
+  post '/signup', to: 'users#create'
+
+  get '/login', to: 'sessions#new'
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
+
   get 'recipes/index'
   get 'ratings/new'
   get 'categories/index'
-  root "static_pages#home"
 
-  get '/signup' => 'users#new'
-  post '/signup' => 'users#create'
 
-  get '/login' => 'sessions#new'
-  post '/login' => 'sessions#create'
-  get '/logout' => 'sessions#destroy'
 
   resources :users
 
   resources :categories do
-    resources :recipes
+    resources :recipes, only: [:index, :show]
   end
 
-  resources :recipes do
-    resources :ingredients
-  end
+  resources :recipes
+
+  resources :ratings, only: [:new, :create]
+  
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
