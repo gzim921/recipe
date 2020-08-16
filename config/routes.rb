@@ -24,7 +24,13 @@ Rails.application.routes.draw do
     resources :recipes, only: [:index, :show]
   end
 
-  resources :recipes
+  resources :categories
+  resources :ingredients
+
+  resources :recipes do
+    resources :categories, only: [:new, :create, :index]
+    resources :ingredients, only: [:new, :create]
+  end
 
   resources :ratings, only: [:new, :create]
   
