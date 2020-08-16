@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   before_action :require_login
-  before_action :admin_only, except: [:index, :show]
+  before_action :admin_only, except: [:index, :show, :newest_recipe]
 
   def index
     @users = User.all
@@ -34,32 +34,33 @@ class RecipesController < ApplicationController
   end
 
   def show
-    @recipe = Recipe.find_by_id(params[:id])
+    recipe
   end
 
   def edit 
-    @recipe = Recipe.find_by_id(params[:id])
-    if @recipe
-      @ingredients = 2.times.collect { @recipe.recipe_ingredients.build }
-      @categories = 2.times.collect { @recipe.recipe_categories.build }
-    end
+    recipe
   end
 
   def update
-    recipe = Recipe.find_by_id(params[:id])
+    recipe
     if recipe.update(recipe_params)
-      recipe.add_ingredients_to_recipe(recipe_ingredient_params)
-      recipe.add_categories_to_recipe(recipe_category_params)
       redirect_to recipe_path(recipe)
-    else
-      redirect_to new_recipe_path, alert: recipe.errors.full_messages.each {|m| m}.join
+      recipe
+      if recipe.update(recipe_params)
+        redirect_to recipe_path(recipe)
+      else
+      render :edit
+      end
     end
   end
 
   def destroy
-    recipe = Recipe.find_by_id(params[:id])
     recipe.destroy
     redirect_to recipes_path
+  end
+
+  def newest_recipe
+    @recipe = Recipe.latest
   end
 
   private
@@ -68,11 +69,7 @@ class RecipesController < ApplicationController
     params.require(:recipe).permit(:name, :cooking_time, :servings, :directions)
   end
 
-  def recipe_ingredient_params
-    params.require(:recipe).permit(recipe_ingredients_attributes: [:quantity, :ingredient_id, ingredient: [:name]])
-  end
-
-  def recipe_category_params
-    params.require(:recipe).permit(recipe_categories_attributes: [:category_id, category: [:name]])
+  def recipe
+    @recipe = Recipe.find_by_id(params[:id])
   end
 end
