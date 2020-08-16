@@ -23,14 +23,11 @@ class RecipesController < ApplicationController
   end
 
   def create
-    recipe = current_user.recipes.build(recipe_params)
-    if recipe.save
-      recipe.add_ingredients_to_recipe(recipe_ingredient_params)
-      recipe.add_categories_to_recipe(recipe_category_params)
-      redirect_to recipe_path(recipe), notice: "Your recipe has successfully been added"
+    @recipe = current_user.recipes.build(recipe_params)
+    if @recipe.save
+      redirect_to recipe_path(@recipe)
     else
-      @recipe = Recipe.new
-      redirect_to new_recipe_path
+      render :new
     end
   end
 

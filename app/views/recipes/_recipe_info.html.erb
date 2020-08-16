@@ -20,7 +20,7 @@
         <% end %></li>
       <% end %>
     </ul>
-    <strong><li class="list-group-item">Recipe created by <%= @recipe.user.name %></li></strong>
+    <strong><li class="list-group-item">Recipe created by <%= @recipe.user.user_name %></li></strong>
   </div>
   <br />
   <div class="container">
@@ -28,7 +28,7 @@
       <h6><strong>Ratings:</strong></h6>
       <% @recipe.ratings.each do |rating| %>
         <p><%= rating.score %> star -
-        <strong><%= rating.user.name %></strong><br /></p>
+        <strong><%= rating.user.first_name %></strong><br /></p>
       <% end %>
     <% end %>
   </div>

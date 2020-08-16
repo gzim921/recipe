@@ -40,7 +40,5 @@ Rails.application.routes.draw do
   resources :ratings, only: [:new, :create]
 
   get 'newest_recipe', to: 'recipes#newest_recipe'
-
-  get 'most_popular_user', to: 'users#most_popular_user'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
