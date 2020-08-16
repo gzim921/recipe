@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  get '/auth/github/callback' => 'sessions#create'
+  get '/auth/github/callback', to: 'sessions#create'
 
   get 'recipes/index'
   get 'ratings/new'
@@ -39,6 +39,8 @@ Rails.application.routes.draw do
 
   resources :ratings, only: [:new, :create]
 
-  get 'newest_recipe' => 'recipes#newest_recipe'
+  get 'newest_recipe', to: 'recipes#newest_recipe'
+
+  get 'most_popular_user', to: 'users#most_popular_user'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

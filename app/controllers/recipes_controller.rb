@@ -1,6 +1,7 @@
 class RecipesController < ApplicationController
   before_action :require_login
   before_action :admin_only, except: [:index, :show, :newest_recipe]
+  before_action :set_recipe, except: [:index, :new, :create, :newest_recipe]
 
   def index
     @users = User.all
@@ -22,7 +23,7 @@ class RecipesController < ApplicationController
   end
 
   def create
-    recipe = current_user.recipes.create(recipe_params)
+    recipe = current_user.recipes.build(recipe_params)
     if recipe.save
       recipe.add_ingredients_to_recipe(recipe_ingredient_params)
       recipe.add_categories_to_recipe(recipe_category_params)
@@ -34,33 +35,27 @@ class RecipesController < ApplicationController
   end
 
   def show
-    recipe
   end
 
   def edit 
-    recipe
   end
 
   def update
     recipe
-    if recipe.update(recipe_params)
-      redirect_to recipe_path(recipe)
-      recipe
-      if recipe.update(recipe_params)
-        redirect_to recipe_path(recipe)
-      else
+    if @recipe.update(recipe_params)
+      redirect_to recipe_path(@recipe)
+    else
       render :edit
-      end
     end
   end
 
   def destroy
-    recipe.destroy
+    @recipe.destroy
     redirect_to recipes_path
   end
 
   def newest_recipe
-    @recipe = Recipe.latest
+    @recipe = Recipe.newest.first
   end
 
   private
@@ -69,7 +64,7 @@ class RecipesController < ApplicationController
     params.require(:recipe).permit(:name, :cooking_time, :servings, :directions)
   end
 
-  def recipe
+  def set_recipe
     @recipe = Recipe.find_by_id(params[:id])
   end
 end
