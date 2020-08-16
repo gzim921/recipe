@@ -1,11 +1,12 @@
 class RecipesController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: [:index, :show, :newest_recipe]
   before_action :admin_only, except: [:index, :show, :newest_recipe]
   before_action :set_recipe, except: [:index, :new, :create, :newest_recipe]
 
   def index
     @users = User.all
     @categories = Category.all
+    @recipes = Recipe.all
 
     if !params[:name].blank?
       @recipes = Recipe.by_name(params[:name])
