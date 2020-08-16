@@ -1,2 +1,17 @@
 <h1>Recipes#index</h1>
 <p>Find me in app/views/recipes/index.html.erb</p>
+<h1>Our recipes</h1>
+<%= form_tag("/recipes", method: "get") do %>
+  Recipes by title:
+  <%= text_field_tag :name, params[:name] %><br /><br />
+  Recipes by author:
+  <%= select_tag "user", options_from_collection_for_select(@users, "id", "name"), include_blank: true %><br /><br />
+
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<ol>
+  <% @recipes.each do |recipe| %>
+    <li><%= link_to recipe.name, recipe_path(recipe) %></li>
+  <% end %>
+</ol> 
