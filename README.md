@@ -1,24 +1,34 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## A final Rails Web Application for Recipe
 
-Things you may want to cover:
+Recipe is rails application that allows users to upload their recipes to the website. Users can view each others recipes and can edit and delete their own submissions.
 
-* Ruby version
+Builded using Ruby, Rails, SQLite3, Bootstrap.
 
-* System dependencies
+Test it Out!
 
-* Configuration
+Create your own account or user a precreated account.
 
-* Database creation
+Email: "admin@admin.com"
 
-* Database initialization
+Password: "admin01"
 
-* How to run the test suite
+## Installation Guide
 
-* Services (job queues, cache servers, search engines, etc.)
+First, you need to clone the repository `git clone https://github.com/gzim921/recipe.git`
 
-* Deployment instructions
+After you downloaded the project you must change directory to `cd recipe`.
 
-* ...
+You need Ruby version 2.6.6 to start this project " you can change on Gemfile "
+
+Run
+ ```ruby
+bundle install
+
+rails db:create db:migrate db:seed
+
+rails s
+```
+
+Now you ready to create your own recipes. Have a nice browsing! 

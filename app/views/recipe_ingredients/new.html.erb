@@ -13,7 +13,7 @@
   <% end %>
 
   <%= render partial: 'layouts/errors', locals: {object: @recipe_ingredient}  %>
-  <%= form_for([@recipe_ingredient.recipe, @recipe_ingredient]) do |f|%>
+  <%= form_with model: [@recipe_ingredient.recipe, @recipe_ingredient] do |f|%>
     <% if params[:recipe_id] %>
       <%= f.hidden_field :recipe_id %>
     <% else %>

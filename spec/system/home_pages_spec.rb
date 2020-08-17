@@ -2,26 +2,26 @@ require 'rails_helper'
 
 RSpec.describe 'HomePages', type: :system do
   before do
-    driven_by :selenium, using: :chrome
+    driven_by(:rack_test)
 
     visit root_path
   end
 
-  it 'shows the home page link' do
-    expected = page.has_link?('All Recipes')
+  it 'shows the github projects' do
+    expected = page.has_link?('Recipe')
 
     expect(expected).to be true
   end
 
   context 'when no user is logged in' do
-    it 'shows the Log In link' do
-      expected = page.has_link?('login')
+    it 'shows the Login link' do
+      expected = page.has_link?('Login')
 
       expect(expected).to be true
     end
 
     it 'shows the Sign Up link' do
-      expected = page.has_link?('Register')
+      expected = page.has_link?('Sign Up')
 
       expect(expected).to be true
     end
@@ -31,31 +31,39 @@ RSpec.describe 'HomePages', type: :system do
     before do
       user = create(:user)
 
-      visit login_path
-
-      within('form') do
-        fill_in 'Email', with: user.mail
+      visit "/login/"
+        fill_in 'Email', with: user.email
         fill_in 'Password', with: user.password
-        click_on 'Sign In'
-      end
-
-      visit root_path
+        click_on 'Login'
+      visit "users/#{user.id}"
     end
 
-    it 'shows the New Recipe link' do
-      expecting = page.has_link?('New Recipe')
+    it 'shows the Home link' do
+      expecting = page.has_link?('Home')
 
       expect(expecting).to be true
     end
 
-    it 'shows the My Profile link' do
-      expecting = page.has_link?('My Profile')
+    it 'shows the All recipes link' do
+      expecting = page.has_link?('Recipes')
+
+      expect(expecting).to be true
+    end
+
+    it 'shows the newest recipe link' do
+      expecting = page.has_link?('Newest Recipe')
+
+      expect(expecting).to be true
+    end
+
+    it 'shows categories link' do
+      expecting = page.has_link?('Categories')
 
       expect(expecting).to be true
     end
 
     it 'shows the Logout link' do
-      expecting = page.has_link?('logout')
+      expecting = page.has_link?('Log Out')
 
       expect(expecting).to be true
     end

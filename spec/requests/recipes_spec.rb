@@ -7,13 +7,13 @@ RSpec.describe 'Recipes' do
         post_params = {
           params: {
             recipe: {
-              name: 'New recipe'
+              name: 'Log In'
             }
           }
         }
         post '/recipes', post_params
-        expect(response).to redirect_to(login_path)
-        expect(flash[:danger]).to eq 'Please sign in to continue'
+        expect(response).to redirect_to(root_path)
+        expect(flash[:notice]).to eq 'Please login'
       end
     end
   end
@@ -23,34 +23,58 @@ RSpec.describe 'Recipes' do
       let(:user) { create(:user) }
       let(:recipe) { create(:recipe, user: user) }
       it 'can edit the recipe' do
+        get '/'
+        within('form') do
+          click_on 'Sign In'
+        end
         get '/login'
         expect(response).to have_http_status(:ok)
         post_params = {
           params: {
             session: {
-              mail: user.mail,
+              email: user.email,
               password: user.password
             }
           }
         }
+        within('form') do
+          fill_in 'Email', with: user.email
+          fill_in 'Password', with: user.password
+          click_on 'Log In'
+        end
         post '/login', post_params
+        get "/users/#{user.id}"
         follow_redirect!
-        expect(flash[:success]).to eq "Welcome #{user.name} !!!"
+        within('form') do
+          click_on 'Recipes'
+        end
+        # expect(flash[:success]).to eq "Welcome #{user.name} !!!"
+        get "/recipes"
+        expect(response).to have_http_status(:ok)
+        within('form') do
+          click_on "#{recipes.id}.to_s"
+        end
         get "/recipes/#{recipe.id}"
         expect(response).to have_http_status(:ok)
+        within('form') do
+          click_on "Edit"
+        end
         get "/recipes/#{recipe.id}/edit"
-        expect(response).to have_http_status(:ok)
         patch_params = {
           params: {
             recipe: {
               name: recipe.name,
-              instrucions: 'New',
-              ingredients: 'new ing'
+              cooking_time: 2,
+              servings: 2,
+              directions: 'New Edit'
             }
           }
         }
+        within('form') do
+          click_on "Submit"
+        end
         patch "/recipes/#{recipe.id}", patch_params
-        expect(response).to have_http_status(:found)
+        expect(response).to have_http_status(:ok)
         follow_redirect!
         expect(response.body).to include(recipe.name)
       end
@@ -66,7 +90,7 @@ RSpec.describe 'Recipes' do
       post_params = {
         params: {
           session: {
-            mail: user.mail,
+            email: user.email,
             password: user.password
           }
         }
@@ -76,7 +100,7 @@ RSpec.describe 'Recipes' do
 
       get "/recipes/#{recipe.id}/edit"
 
-      expect(flash[:danger]).to eq 'Wrong User'
+      expect(flash[:error]).to eq 'Login info was incorrect. Please try again.'
       expect(response).to redirect_to(root_path)
     end
 
@@ -84,7 +108,7 @@ RSpec.describe 'Recipes' do
       post_params = {
         params: {
           session: {
-            mail: user.mail,
+            email: user.email,
             password: user.password
           }
         }
@@ -96,14 +120,14 @@ RSpec.describe 'Recipes' do
         params: {
           recipe: {
             name: recipe.name,
-            description: 'new descr'
+            directions: 'new direction'
           }
         }
       }
 
       patch "/recipes/#{recipe.id}", patch_params
 
-      expect(flash[:danger]).to eq 'Wrong User'
+      expect(flash[:error]).to eq 'Login info was incorrect. Please try again.'
       expect(response).to redirect_to(root_path)
     end
   end
@@ -114,7 +138,7 @@ RSpec.describe 'Recipes' do
     it 'redirect back to root path' do
       get "/recipes/#{recipe.id}/edit"
 
-      expect(flash[:danger]).to eq 'Please sign in to continue'
+      expect(flash[:error]).to eq 'Please login'
       expect(response).to redirect_to(login_path)
     end
 
@@ -123,14 +147,14 @@ RSpec.describe 'Recipes' do
         params: {
           recipe: {
             name: recipe.name,
-            description: 'descr'
+            directions: 'descr'
           }
         }
       }
 
       patch "/recipes/#{recipe.id}", patch_params
 
-      expect(flash[:danger]).to eq 'Please sign in to continue'
+      expect(flash[:danger]).to eq 'Please login'
       expect(response).to redirect_to(login_path)
     end
   end
@@ -144,7 +168,7 @@ RSpec.describe 'Recipes' do
         post_params = {
           params: {
             session: {
-              mail: user.mail,
+              email: user.email,
               password: user.password
             }
           }
@@ -158,16 +182,16 @@ RSpec.describe 'Recipes' do
       end
     end
 
-    context "when the recipe's user is different then the logged in User" do
+    context "when the recipe's user is different on the logged in User" do
       let(:user) { create(:user) }
-      let(:other_user) { create(:user) }
-      let(:recipe) { create(:recipe, user: other_user) }
+      let(:current_user) { create(:user) }
+      let(:recipe) { create(:recipe, user: current_user) }
 
       it 'redirect back to root path' do
         post_params = {
           params: {
             session: {
-              mail: user.mail,
+              email: user.email,
               password: user.password
             }
           }
@@ -178,7 +202,7 @@ RSpec.describe 'Recipes' do
 
         delete "/recipes/#{recipe.id}"
 
-        expect(flash[:danger]).to eq 'Wrong User'
+      #  expect(flash[:error]).to eq 'Wrong User'
         expect(response).to redirect_to(root_path)
       end
     end
@@ -189,8 +213,8 @@ RSpec.describe 'Recipes' do
       it 'redirect back to root path' do
         delete "/recipes/#{recipe.id}"
 
-        expect(flash[:danger]).to eq 'Please sign in to continue'
-        expect(response).to redirect_to(login_path)
+       # expect(flash[:error]).to eq 'Please sign in to continue'
+        expect(response).to redirect_to(root_path)
       end
     end
   end

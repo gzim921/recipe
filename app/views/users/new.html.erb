@@ -1,7 +1,7 @@
 <div class="container text-center">
   <%= render partial: 'layouts/errors', locals: {object: @user}  %>
   <h1>Sign up</h1><br />
-  <%= form_for(@user) do |f| %>
+  <%= form_for@user do |f| %>
     <div class="form-group">
       <%= f.label :first_name %>
       <%= f.text_field :first_name %>

@@ -5,7 +5,7 @@
 </div>
 <div class="container">
   <%= render partial: 'layouts/errors', locals: {object: @rating}  %>
-  <%= form_for(@rating) do |f|%>
+  <%= form_for@rating do |f|%>
     <div>
       <%= f.label :recipe_id, "Select a Recipe:  " %>
       <%= f.collection_select :recipe_id, Recipe.all, :id, :name, include_blank: true %>

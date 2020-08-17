@@ -39,7 +39,6 @@ class RecipesController < ApplicationController
   end
 
   def update
-    recipe
     if @recipe.update(recipe_params)
       redirect_to recipe_path(@recipe)
     else
@@ -57,7 +56,7 @@ class RecipesController < ApplicationController
   end
 
   private
-  
+
   def recipe_params
     params.require(:recipe).permit(:name, :cooking_time, :servings, :directions)
   end
