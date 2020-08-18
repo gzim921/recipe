@@ -12,13 +12,9 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  get '/auth/github/callback', to: 'sessions#create'
-
   get 'recipes/index'
   get 'ratings/new'
   get 'categories/index'
-
-
 
   resources :users
 
